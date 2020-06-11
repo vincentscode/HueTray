@@ -1,2 +1,2 @@
 # HueTray
-Controll all your Hue lights diorectly from the comfort of your System Tray.
+HueTray is a small tool which lets you controll your Hue lights directly from your System Tray.
