@@ -1,2 +1,2 @@
 # HueTray
-Controll all your Hue lights diorectly from the comfort of your System Tray.
+Controll all your Hue lights directly from the comfort of your System Tray.

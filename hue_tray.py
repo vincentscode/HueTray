@@ -22,8 +22,9 @@ def create_menu_item(menu, label, func):
 
 
 class TaskBarIcon(wx.adv.TaskBarIcon):
-    def __init__(self, frame):
+    def __init__(self, frame, light_id):
         self.frame = frame
+        self.light_id = light_id
         super(TaskBarIcon, self).__init__()
         self.set_icon(TRAY_ICON)
         s = sched.scheduler(time.time, time.sleep)
@@ -36,7 +37,8 @@ class TaskBarIcon(wx.adv.TaskBarIcon):
         self.Bind(wx.adv.EVT_TASKBAR_LEFT_DOWN, self.on_left_down)
 
     def get_state(self):
-        r = requests.get("http://{}/api/{}/{}".format(ip, key, "lights/1"))
+        r = requests.get("http://{}/api/{}/{}".format(ip, key, f"lights/{self.light_id}"))
+        print(r.json())
         parsed = json.loads(r.text)
         if parsed["state"]["on"]:
             self.set_icon(TRAY_ICON)
@@ -59,7 +61,7 @@ class TaskBarIcon(wx.adv.TaskBarIcon):
             self.set_icon(TRAY_ICON)
         else:
             self.set_icon(TRAY_ICON2)
-        requests.put("http://{}/api/{}/{}".format(ip, key, "lights/1/state"), json.dumps({"on": not self.state}))
+        requests.put("http://{}/api/{}/{}".format(ip, key, f"lights/{self.light_id}/state"), json.dumps({"on": not self.state}))
 
     def on_exit(self, event):
         wx.CallAfter(self.Destroy)
@@ -69,7 +71,9 @@ class App(wx.App):
     def OnInit(self):
         frame=wx.Frame(None)
         self.SetTopWindow(frame)
-        TaskBarIcon(frame)
+        for i in [5, 2, 3]:
+        	TaskBarIcon(frame, i)
+        	time.sleep(0.5)
         return True
 
 def main():
